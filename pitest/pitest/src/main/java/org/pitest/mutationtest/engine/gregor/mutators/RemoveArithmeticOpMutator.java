@@ -14,6 +14,7 @@ import org.pitest.mutationtest.engine.gregor.AbstractInsnMutator;
 import org.pitest.mutationtest.engine.gregor.MethodInfo;
 import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
 import org.pitest.mutationtest.engine.gregor.MutationContext;
+import org.pitest.mutationtest.engine.gregor.AbstractJumpMutator.Substitution;
 
 public enum RemoveArithmeticOpMutator implements MethodMutatorFactory {
 	REMOVE_ARITHMETIC_OP_MUTATOR;
