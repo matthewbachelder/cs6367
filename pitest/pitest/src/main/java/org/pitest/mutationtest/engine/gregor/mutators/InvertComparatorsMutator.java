@@ -10,12 +10,7 @@ import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-//import org.pitest.mutationtest.engine.MutationIdentifier;
-import org.pitest.mutationtest.engine.gregor.AbstractInsnMutator;
-import org.pitest.mutationtest.engine.gregor.MethodInfo;
-import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
-import org.pitest.mutationtest.engine.gregor.MutationContext;
-import org.pitest.mutationtest.engine.gregor.AbstractJumpMutator.Substitution;
+import org.pitest.mutationtest.engine.gregor.*;
 
 public enum InvertComparatorsMutator implements MethodMutatorFactory {
 
@@ -39,7 +34,7 @@ public enum InvertComparatorsMutator implements MethodMutatorFactory {
 
 }
 
-class InvertComparatorsMethodVisitor extends AbstractInsnMutator {
+class InvertComparatorsMethodVisitor extends AbstractJumpMutator {
 
   private static final String                     DESCRIPTION = "inverted comparator operator";
   private static final Map<Integer, Substitution> MUTATIONS   = new HashMap<Integer, Substitution>();
