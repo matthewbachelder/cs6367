@@ -16,7 +16,7 @@ import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
 import org.pitest.mutationtest.engine.gregor.MutationContext;
 
 public enum RemoveArithmeticOpMutator implements MethodMutatorFactory {
-	REMOVE_AITHMETIC_OP_MUTATOR;
+	REMOVE_ARITHMETIC_OP_MUTATOR;
 	  @Override
 	  public MethodVisitor create(final MutationContext context,
 	      final MethodInfo methodInfo, final MethodVisitor methodVisitor) {
