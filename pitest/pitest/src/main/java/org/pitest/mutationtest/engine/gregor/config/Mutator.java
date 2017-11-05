@@ -54,7 +54,7 @@ public final class Mutator {
      * Default mutator that inverts the negation of integer and floating point
      * numbers.
      */
-    add("REMOVE_ARITHMETIC_OP", RemoveArithmeticOpMutator.REMOVE_AITHMETIC_OP_MUTATOR);
+    add("REMOVE_ARITHMETIC_OP", RemoveArithmeticOpMutator.REMOVE_ARITHMETIC_OP_MUTATOR);
 
     /**
      * Default mutator that inverts the negation of integer and floating point
