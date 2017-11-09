@@ -33,6 +33,7 @@ import org.pitest.help.PitHelpError;
 import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
 import org.pitest.mutationtest.engine.gregor.mutators.*;
 import org.pitest.mutationtest.engine.gregor.mutators.RemoveConditionalMutator.Choice;
+import org.pitest.mutationtest.engine.gregor.mutators.cs6367.*;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.NakedReceiverMutator;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.RemoveIncrementsMutator;
 import org.pitest.mutationtest.engine.gregor.mutators.experimental.RemoveSwitchMutator;
@@ -45,16 +46,40 @@ public final class Mutator {
   static {
 
     /**
-     * Default mutator that inverts the negation of integer and floating point
-     * numbers.
+     * CS/SE 6367 mutator that negates an integer or floating variable
      */
-    add("INVERT_COMPARATORS_MUTATOR", InvertComparatorsMutator.INVERT_COMPARATORS_MUTATOR);
+    add("ABS", ABSMutator.ABS_MUTATOR);
 
     /**
-     * Default mutator that inverts the negation of integer and floating point
-     * numbers.
+     * CS/SE 6367 mutator that replaces the operators & and | by | and &, respectively
      */
-    add("REMOVE_ARITHMETIC_OP", RemoveArithmeticOpMutator.REMOVE_ARITHMETIC_OP_MUTATOR);
+    add("OBBN", OBBNMutator.OBBN_MUTATOR);
+
+    /**
+     * CS/SE 6367 mutator that replaces an arithmetic expression by one of its operands
+     */
+    add("AOD", AODMutator.AOD_MUTATOR);
+
+    /**
+     * CS/SE 6367 mutator that replaces relational operators with a different one
+     */
+    add("ROR", RORMutator.ROR_MUTATOR);
+
+    /**
+     * CS/SE 6367 mutator that replaces an arithmetic operator with a different one
+     */
+    add("AOR", AORMutator.AOR_MUTATOR);
+
+    /**
+     * CS/SE 6367 mutator that adds or removes an incrementer operator from a variable
+     */
+    add("UOI", UOIMutator.UOI_MUTATOR);
+
+    /**
+     * CS/SE 6367 mutator that replaces a constant with its negation, 0, 1,
+     * its incremented value or its decremented value
+     */
+    add("CRCR", CRCRMutator.CRCR_MUTATOR);
 
     /**
      * Default mutator that inverts the negation of integer and floating point
@@ -182,6 +207,19 @@ public final class Mutator {
     List<MethodMutatorFactory> l = new ArrayList<MethodMutatorFactory>(a);
     l.addAll(b);
     return l;
+  }
+
+  /**
+   * Mutators for CS/SE 6367
+   */
+  public static Collection<MethodMutatorFactory> cs6367() {
+    return group(InvertNegsMutator.INVERT_NEGS_MUTATOR,
+            ReturnValsMutator.RETURN_VALS_MUTATOR,
+            MathMutator.MATH_MUTATOR,
+            VoidMethodCallMutator.VOID_METHOD_CALL_MUTATOR,
+            NegateConditionalsMutator.NEGATE_CONDITIONALS_MUTATOR,
+            ConditionalsBoundaryMutator.CONDITIONALS_BOUNDARY_MUTATOR,
+            IncrementsMutator.INCREMENTS_MUTATOR);
   }
 
   /**
