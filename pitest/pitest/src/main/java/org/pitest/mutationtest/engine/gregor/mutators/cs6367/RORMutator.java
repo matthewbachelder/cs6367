@@ -1,25 +1,32 @@
 /**
  * Author(s): Matthew Bachelder, Vaishnavi Bhosale, Richard Fisher
- * 
- * 
+ *
+ * ROR Mutator:
+ *    Mutator to replace the relational operators with another one.
+ *    It applies every replacement, e.g., <  ≥, or >  ≤
+ *    Based on NEGATE_CONDITIONALS mutator
  */
-package org.pitest.mutationtest.engine.gregor.mutators;
+//TODO: Implement Me!!!
+package org.pitest.mutationtest.engine.gregor.mutators.cs6367;
+
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.pitest.mutationtest.engine.gregor.AbstractJumpMutator;
+import org.pitest.mutationtest.engine.gregor.MethodInfo;
+import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
+import org.pitest.mutationtest.engine.gregor.MutationContext;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.pitest.mutationtest.engine.gregor.*;
+public enum RORMutator implements MethodMutatorFactory {
 
-public enum InvertComparatorsMutator implements MethodMutatorFactory {
-
-    INVERT_COMPARATORS_MUTATOR;
+    ROR_MUTATOR;
 
   @Override
   public MethodVisitor create(final MutationContext context,
       final MethodInfo methodInfo, final MethodVisitor methodVisitor) {
-    return new InvertComparatorsMethodVisitor(this, context, methodVisitor);
+    return new RORMethodVisitor(this, context, methodVisitor);
   }
 
   @Override
@@ -34,7 +41,7 @@ public enum InvertComparatorsMutator implements MethodMutatorFactory {
 
 }
 
-class InvertComparatorsMethodVisitor extends AbstractJumpMutator {
+class RORMethodVisitor extends AbstractJumpMutator {
 
   private static final String                     DESCRIPTION = "inverted comparator operator";
   private static final Map<Integer, Substitution> MUTATIONS   = new HashMap<Integer, Substitution>();
@@ -57,8 +64,8 @@ class InvertComparatorsMethodVisitor extends AbstractJumpMutator {
     MUTATIONS.put(Opcodes.IF_ICMPLT, new Substitution(Opcodes.IF_ICMPGE, DESCRIPTION));
   }
 
-  InvertComparatorsMethodVisitor(final MethodMutatorFactory factory,
-      final MutationContext context, final MethodVisitor delegateMethodVisitor) {
+  RORMethodVisitor(final MethodMutatorFactory factory,
+                   final MutationContext context, final MethodVisitor delegateMethodVisitor) {
     super(factory, context, delegateMethodVisitor);
   }
 

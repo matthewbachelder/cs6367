@@ -37,7 +37,7 @@ class RemoveArithmeticOpMethodVisitor extends AbstractJumpMutator {
   private static final Map<Integer, Substitution> MUTATIONS   = new HashMap<Integer, Substitution>();
 
   static {
-	  //TODO: Change IADD, FADD, DADD, LADD,ISUB, FSUB, DSUB, LSUB, IMUL, FMUL, DMUL, LMUL, IDIV, FDIV, DDIV, LDIV.  Any others???  
+	  //TODO: Change IADD, FADD, DADD, LADD, ISUB, FSUB, DSUB, LSUB, IMUL, FMUL, DMUL, LMUL, IDIV, FDIV, DDIV, LDIV.  Any others???
     MUTATIONS.put(Opcodes.IADD, new Substitution(Opcodes.ISUB, DESCRIPTION));
     MUTATIONS.put(Opcodes.FADD, new Substitution(Opcodes.FSUB, DESCRIPTION));
     MUTATIONS.put(Opcodes.DADD, new Substitution(Opcodes.DSUB, DESCRIPTION));
