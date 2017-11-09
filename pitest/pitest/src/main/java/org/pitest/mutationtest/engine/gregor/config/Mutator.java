@@ -45,111 +45,67 @@ public final class Mutator {
 
   static {
 
-    /**
-     * CS/SE 6367 mutator that negates an integer or floating variable
-     */
+    /** CS/SE 6367 mutator that negates an integer or floating variable */
     add("ABS", ABSMutator.ABS_MUTATOR);
 
-    /**
-     * CS/SE 6367 mutator that replaces the operators & and | by | and &, respectively
-     */
+    /** CS/SE 6367 mutator that replaces the operators & and | by | and &, respectively */
     add("OBBN", OBBNMutator.OBBN_MUTATOR);
 
-    /**
-     * CS/SE 6367 mutator that replaces an arithmetic expression by one of its operands
-     */
+    /** CS/SE 6367 mutator that replaces an arithmetic expression by one of its operands */
     add("AOD", AODMutator.AOD_MUTATOR);
 
-    /**
-     * CS/SE 6367 mutator that replaces relational operators with a different one
-     */
+    /** CS/SE 6367 mutator that replaces relational operators with a different one */
     add("ROR", RORMutator.ROR_MUTATOR);
 
-    /**
-     * CS/SE 6367 mutator that replaces an arithmetic operator with a different one
-     */
+    /** CS/SE 6367 mutator that replaces an arithmetic operator with a different one */
     add("AOR", AORMutator.AOR_MUTATOR);
 
-    /**
-     * CS/SE 6367 mutator that adds or removes an incrementer operator from a variable
-     */
+    /** CS/SE 6367 mutator that adds or removes an incrementer operator from a variable */
     add("UOI", UOIMutator.UOI_MUTATOR);
 
-    /**
-     * CS/SE 6367 mutator that replaces a constant with its negation, 0, 1,
-     * its incremented value or its decremented value
-     */
+    /** CS/SE 6367 mutator that replaces a constant with its negation, 0, 1, its incremented value or its decremented value */
     add("CRCR", CRCRMutator.CRCR_MUTATOR);
 
-    /**
-     * Default mutator that inverts the negation of integer and floating point
-     * numbers.
-     */
+    /** Default mutator that inverts the negation of integer and floating point numbers */
     add("INVERT_NEGS", InvertNegsMutator.INVERT_NEGS_MUTATOR);
 
-    /**
-     * Default mutator that mutates the return values of methods.
-     */
+    /** Default mutator that mutates the return values of methods */
     add("RETURN_VALS", ReturnValsMutator.RETURN_VALS_MUTATOR);
 
-    /**
-     * Optional mutator that mutates integer and floating point inline
-     * constants.
-     */
+    /** Optional mutator that mutates integer and floating point inline constants */
     add("INLINE_CONSTS", new InlineConstantMutator());
 
-    /**
-     * Default mutator that mutates binary arithmetic operations.
-     */
+    /** Default mutator that mutates binary arithmetic operations */
     add("MATH", MathMutator.MATH_MUTATOR);
 
-    /**
-     * Default mutator that removes method calls to void methods.
-     *
-     */
+    /** Default mutator that removes method calls to void methods */
     add("VOID_METHOD_CALLS", VoidMethodCallMutator.VOID_METHOD_CALL_MUTATOR);
 
-    /**
-     * Default mutator that negates conditionals.
-     */
+    /** Default mutator that negates conditionals */
     add("NEGATE_CONDITIONALS",
         NegateConditionalsMutator.NEGATE_CONDITIONALS_MUTATOR);
 
-    /**
-     * Default mutator that replaces the relational operators with their
-     * boundary counterpart.
-     */
+    /** Default mutator that replaces the relational operators with their boundary counterpart */
     add("CONDITIONALS_BOUNDARY",
         ConditionalsBoundaryMutator.CONDITIONALS_BOUNDARY_MUTATOR);
 
-    /**
-     * Default mutator that mutates increments, decrements and assignment
-     * increments and decrements of local variables.
-     */
+    /** Default mutator that mutates increments, decrements and assignment increments and decrements of local variables */
     add("INCREMENTS", IncrementsMutator.INCREMENTS_MUTATOR);
 
-    /**
-     * Optional mutator that removes local variable increments.
-     */
+    /** Optional mutator that removes local variable increments */
 
     add("REMOVE_INCREMENTS", RemoveIncrementsMutator.REMOVE_INCREMENTS_MUTATOR);
 
-    /**
-     * Optional mutator that removes method calls to non void methods.
-     */
+    /** Optional mutator that removes method calls to non void methods */
     add("NON_VOID_METHOD_CALLS",
         NonVoidMethodCallMutator.NON_VOID_METHOD_CALL_MUTATOR);
 
-    /**
-     * Optional mutator that replaces constructor calls with null values.
-     */
+    /** Optional mutator that replaces constructor calls with null values */
     add("CONSTRUCTOR_CALLS", ConstructorCallMutator.CONSTRUCTOR_CALL_MUTATOR);
 
-    /**
-     * Removes conditional statements so that guarded statements always execute
+    /** Removes conditional statements so that guarded statements always execute
      * The EQUAL version ignores LT,LE,GT,GE, which is the default behavior,
-     * ORDER version mutates only those.
-     */
+     * ORDER version mutates only those */
 
     add("REMOVE_CONDITIONALS_EQ_IF", new RemoveConditionalMutator(Choice.EQUAL,
         true));
@@ -161,28 +117,19 @@ public final class Mutator {
         Choice.ORDER, false));
     addGroup("REMOVE_CONDITIONALS", RemoveConditionalMutator.makeMutators());
 
-    /**
-     * Experimental mutator that removed assignments to member variables.
-     */
+    /** Experimental mutator that removed assignments to member variables */
     add("EXPERIMENTAL_MEMBER_VARIABLE",
         new org.pitest.mutationtest.engine.gregor.mutators.experimental.MemberVariableMutator());
 
-    /**
-     * Experimental mutator that swaps labels in switch statements
-     */
+    /** Experimental mutator that swaps labels in switch statements */
     add("EXPERIMENTAL_SWITCH",
         new org.pitest.mutationtest.engine.gregor.mutators.experimental.SwitchMutator());
 
-    /**
-     * Experimental mutator that replaces method call with one of its parameters
-     * of matching type
-     */
+    /** Experimental mutator that replaces method call with one of its parameters of matching type */
     add("EXPERIMENTAL_ARGUMENT_PROPAGATION",
         ArgumentPropagationMutator.ARGUMENT_PROPAGATION_MUTATOR);
 
-    /**
-     * Experimental mutator that replaces method call with this
-     */
+    /** Experimental mutator that replaces method call with this */
     add("EXPERIMENTAL_NAKED_RECEIVER", NakedReceiverMutator.NAKED_RECEIVER);
 
     addGroup("REMOVE_SWITCH", RemoveSwitchMutator.makeMutators());
@@ -209,20 +156,20 @@ public final class Mutator {
     return l;
   }
 
-  /**
+  /*
    * Mutators for CS/SE 6367
    */
   public static Collection<MethodMutatorFactory> cs6367() {
-    return group(InvertNegsMutator.INVERT_NEGS_MUTATOR,
-            ReturnValsMutator.RETURN_VALS_MUTATOR,
-            MathMutator.MATH_MUTATOR,
-            VoidMethodCallMutator.VOID_METHOD_CALL_MUTATOR,
-            NegateConditionalsMutator.NEGATE_CONDITIONALS_MUTATOR,
-            ConditionalsBoundaryMutator.CONDITIONALS_BOUNDARY_MUTATOR,
-            IncrementsMutator.INCREMENTS_MUTATOR);
+    return group(ABSMutator.ABS_MUTATOR,
+            OBBNMutator.OBBN_MUTATOR,
+            AODMutator.AOD_MUTATOR,
+            RORMutator.ROR_MUTATOR,
+            AORMutator.AOR_MUTATOR,
+            UOIMutator.UOI_MUTATOR),
+            CRCRMutator.CRCR_MUTATOR);
   }
 
-  /**
+  /*
    * Default set of mutators - designed to provide balance between strength and
    * performance
    */
