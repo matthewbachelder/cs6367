@@ -165,7 +165,7 @@ public final class Mutator {
             AODMutator.AOD_MUTATOR,
             RORMutator.ROR_MUTATOR,
             AORMutator.AOR_MUTATOR,
-            UOIMutator.UOI_MUTATOR),
+            UOIMutator.UOI_MUTATOR,
             CRCRMutator.CRCR_MUTATOR);
   }
 
