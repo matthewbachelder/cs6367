@@ -1,0 +1,4777 @@
+<html>
+<head>
+<style type='text/css'>
+html, body, div, span, p, blockquote, pre {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-weight: inherit;
+	font-style: inherit;
+	font-size: 100%;
+	font-family: inherit;
+	vertical-align: baseline;
+}
+
+body{
+	line-height: 1;
+	color: black;
+	background: white;
+	margin-left: 20px;
+}
+
+.src { 
+	border: 1px solid #dddddd;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-left: 5px;
+	font-family: Consolas, Courier, monospace;
+}
+
+
+.covered {background-color: #ddffdd}
+.uncovered {background-color: #ffdddd}
+.killed {background-color: #aaffaa}
+.survived {background-color: #ffaaaa}
+.uncertain {background-color: #dde7ef}
+.run_error {background-color: #dde7ef}
+.na {background-color: #eeeeee}
+.timed_out {background-color: #dde7ef}
+.non_viable {background-color: #aaffaa}
+.memory_error {background-color: #dde7ef}
+.not_started {background-color: #dde7ef; color : red}
+.no_coverage {background-color: #ffaaaa}
+
+
+.pop {outline:none; }
+.pop strong {line-height:30px;}
+.pop {text-decoration:none;}
+.pop span { z-index:10; display:none; padding:14px 20px; margin-top:-30px; margin-left:28px; width:800px; line-height:16px; word-wrap:break-word; border-radius:4px; -moz-border-radius: 4px; -webkit-border-radius: 4px; -moz-box-shadow: 5px 5px 8px #CCC; -webkit-box-shadow: 5px 5px 8px #CCC; box-shadow: 5px 5px 8px #CCC; }
+.pop:hover span{ display:inline; position:absolute; color:#111; border:1px solid #DCA; background:#fffAF0;}
+</style>
+
+</head>
+<body>
+
+
+<h1>PennTreeReader.java</h1>
+
+<table class="src">
+
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_1'/>
+1
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_1'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>package edu.stanford.nlp.trees; </span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_2'/>
+2
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_2'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import edu.stanford.nlp.util.logging.Redwood;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_3'/>
+3
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_3'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_4'/>
+4
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_4'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.io.*;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_5'/>
+5
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_5'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.ArrayList;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_6'/>
+6
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_6'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.NoSuchElementException;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_7'/>
+7
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_7'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import java.util.regex.Pattern;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_8'/>
+8
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_8'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_9'/>
+9
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_9'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import edu.stanford.nlp.process.Tokenizer;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_10'/>
+10
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_10'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import edu.stanford.nlp.ling.HasIndex;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_11'/>
+11
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_11'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import edu.stanford.nlp.ling.HasTag;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_12'/>
+12
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_12'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>import edu.stanford.nlp.ling.HasWord;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_13'/>
+13
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_13'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_14'/>
+14
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_14'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>/**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_15'/>
+15
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_15'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * This class implements the {@code TreeReader} interface to read Penn Treebank-style</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_16'/>
+16
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_16'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * files. The reader is implemented as a push-down automaton (PDA) that parses the Lisp-style</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_17'/>
+17
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_17'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * format in which the trees are stored. This reader is compatible with both PTB</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_18'/>
+18
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_18'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * and PATB trees.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_19'/>
+19
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_19'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * &#60;br&#62;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_20'/>
+20
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_20'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * One small detail to note is that the &#60;code&#62;PennTreeReader&#60;/code&#62;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_21'/>
+21
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_21'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * silently replaces \* with * and \/ with /.  Two possible designs</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_22'/>
+22
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_22'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * for this were to make the &#60;code&#62;PennTreeReader&#60;/code&#62; always do</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_23'/>
+23
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_23'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * this or to make the &#60;code&#62;TreeNormalizers&#60;/code&#62; do this.  We</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_24'/>
+24
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_24'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * decided to put it in the &#60;code&#62;PennTreeReader&#60;/code&#62; class itself</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_25'/>
+25
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_25'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * to avoid the problem of people making new</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_26'/>
+26
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_26'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * &#60;code&#62;TreeNormalizers&#60;/code&#62; and forgetting to include the</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_27'/>
+27
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_27'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * unescaping.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_28'/>
+28
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_28'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_29'/>
+29
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_29'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @author Christopher Manning</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_30'/>
+30
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_30'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @author Roger Levy</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_31'/>
+31
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_31'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> * @author Spence Green</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_32'/>
+32
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_32'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''> */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_33'/>
+33
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_33'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>public class PennTreeReader implements TreeReader  {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_34'/>
+34
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_34'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_35'/>
+35
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_35'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /** A logger for this class */</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_36'/>
+36
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_36'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  private static Redwood.RedwoodChannels log = Redwood.channels(PennTreeReader.class);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_37'/>
+37
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_37'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_38'/>
+38
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_38'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final Reader reader;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_39'/>
+39
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_39'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final Tokenizer&#60;String&#62; tokenizer;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_40'/>
+40
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_40'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final TreeNormalizer treeNormalizer;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_41'/>
+41
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_41'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private final TreeFactory treeFactory;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_42'/>
+42
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_42'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_43'/>
+43
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_43'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private static final boolean DEBUG = false;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_44'/>
+44
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_44'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_45'/>
+45
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_45'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private Tree currentTree;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_46'/>
+46
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_46'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  // misuse a list as a stack, since we want to avoid the synchronized and old Stack, but don&#39;t need the power and JDK 1.6 dependency of a Deque</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_47'/>
+47
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_47'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private ArrayList&#60;Tree&#62; stack;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_48'/>
+48
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_48'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private static final String leftParen = &#34;(&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_49'/>
+49
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_49'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private static final String rightParen = &#34;)&#34;;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_50'/>
+50
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_50'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_51'/>
+51
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_51'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_52'/>
+52
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_52'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Read parse trees from a &#60;code&#62;Reader&#60;/code&#62;.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_53'/>
+53
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_53'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * For the defaulted arguments, you get a</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_54'/>
+54
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_54'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * &#60;code&#62;SimpleTreeFactory&#60;/code&#62;, no &#60;code&#62;TreeNormalizer&#60;/code&#62;, and</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_55'/>
+55
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_55'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * a &#60;code&#62;PennTreebankTokenizer&#60;/code&#62;.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_56'/>
+56
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_56'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_57'/>
+57
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_57'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param in The &#60;code&#62;Reader&#60;/code&#62;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_58'/>
+58
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_58'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_59'/>
+59
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_59'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public PennTreeReader(Reader in) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_60'/>
+60
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_60'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    this(in, new LabeledScoredTreeFactory());</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_61'/>
+61
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_61'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_62'/>
+62
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_62'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_63'/>
+63
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_63'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_64'/>
+64
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_64'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_65'/>
+65
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_65'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Read parse trees from a &#60;code&#62;Reader&#60;/code&#62;.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_66'/>
+66
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_66'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_67'/>
+67
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_67'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param in the Reader</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_68'/>
+68
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_68'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param tf TreeFactory -- factory to create some kind of Tree</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_69'/>
+69
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_69'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_70'/>
+70
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_70'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public PennTreeReader(Reader in, TreeFactory tf) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_71'/>
+71
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_71'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    this(in, tf, null, new PennTreebankTokenizer(in));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_72'/>
+72
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_72'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_73'/>
+73
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_73'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_74'/>
+74
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_74'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_75'/>
+75
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_75'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_76'/>
+76
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_76'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Read parse trees from a Reader.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_77'/>
+77
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_77'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_78'/>
+78
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_78'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param in Reader</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_79'/>
+79
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_79'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param tf TreeFactory -- factory to create some kind of Tree</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_80'/>
+80
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_80'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param tn the method of normalizing trees</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_81'/>
+81
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_81'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_82'/>
+82
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_82'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public PennTreeReader(Reader in, TreeFactory tf, TreeNormalizer tn) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_83'/>
+83
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_83'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    this(in, tf, tn, new PennTreebankTokenizer(in));</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_84'/>
+84
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_84'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_85'/>
+85
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_85'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_86'/>
+86
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_86'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_87'/>
+87
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_87'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_88'/>
+88
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_88'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Read parse trees from a Reader.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_89'/>
+89
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_89'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_90'/>
+90
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_90'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param in Reader</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_91'/>
+91
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_91'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param tf TreeFactory -- factory to create some kind of Tree</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_92'/>
+92
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_92'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param tn the method of normalizing trees</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_93'/>
+93
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_93'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param st Tokenizer that divides up Reader</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_94'/>
+94
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_94'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_95'/>
+95
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_95'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  public PennTreeReader(Reader in, TreeFactory tf, TreeNormalizer tn, Tokenizer&#60;String&#62; st) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_96'/>
+96
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_96'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    reader = in;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_97'/>
+97
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_97'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    treeFactory = tf;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_98'/>
+98
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_98'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    treeNormalizer = tn;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_99'/>
+99
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_99'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    tokenizer = st;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_100'/>
+100
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_100'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_101'/>
+101
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_101'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // check for whacked out headers still present in Brown corpus in Treebank 3</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_102'/>
+102
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_102'>1</a>
+<span>
+1. <init> : negated conditional &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    String first = (st.hasNext() ? st.peek() : null);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_103'/>
+103
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_103'>2</a>
+<span>
+1. <init> : negated conditional &rarr; SURVIVED<br/>
+2. <init> : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>    if (first != null &#38;&#38; first.startsWith(&#34;*x*x*x&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_104'/>
+104
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_104'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      if (DEBUG) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_105'/>
+105
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_105'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        System.err.printf(&#34;%s: Skipping past whacked out header (%s)%n&#34;,this.getClass().getName(),first);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_106'/>
+106
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_106'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_107'/>
+107
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_107'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      int foundCount = 0;</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_108'/>
+108
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_108'>3</a>
+<span>
+1. <init> : changed conditional boundary &rarr; NO_COVERAGE<br/>
+2. <init> : negated conditional &rarr; NO_COVERAGE<br/>
+3. <init> : negated conditional &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>      while (foundCount &#60; 4 &#38;&#38; st.hasNext()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_109'/>
+109
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_109'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>        first = st.next();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_110'/>
+110
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_110'>2</a>
+<span>
+1. <init> : negated conditional &rarr; NO_COVERAGE<br/>
+2. <init> : negated conditional &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>        if (first != null &#38;&#38; first.startsWith(&#34;*x*x*x&#34;)) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_111'/>
+111
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_111'>1</a>
+<span>
+1. <init> : Changed increment from 1 to -1 &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>          foundCount++;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_112'/>
+112
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_112'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_113'/>
+113
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_113'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_114'/>
+114
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_114'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_115'/>
+115
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_115'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_116'/>
+116
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_116'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    if (DEBUG) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_117'/>
+117
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_117'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      System.err.printf(&#34;%s: Built from%n %s &#34;, this.getClass().getName(), in.getClass().getName());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_118'/>
+118
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_118'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      log.info(&#39; &#39; + ((tf == null) ? &#34;no tf&#34; : tf.getClass().getName()));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_119'/>
+119
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_119'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      log.info(&#39; &#39; + ((tn == null) ? &#34;no tn&#34; : tn.getClass().getName()));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_120'/>
+120
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_120'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      log.info(&#39; &#39; + ((st == null) ? &#34;no st&#34; : st.getClass().getName()));</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_121'/>
+121
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_121'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_122'/>
+122
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_122'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_123'/>
+123
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_123'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_124'/>
+124
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_124'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_125'/>
+125
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_125'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Reads a single tree in standard Penn Treebank format from the</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_126'/>
+126
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_126'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * input stream. The method supports additional parentheses around the</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_127'/>
+127
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_127'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * tree (an unnamed ROOT node) so long as they are balanced. If the token stream</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_128'/>
+128
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_128'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * ends before the current tree is complete, then the method will throw an</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_129'/>
+129
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_129'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * &#60;code&#62;IOException&#60;/code&#62;.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_130'/>
+130
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_130'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * &#60;p&#62;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_131'/>
+131
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_131'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Note that the method will skip malformed trees and attempt to</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_132'/>
+132
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_132'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * read additional trees from the input stream. It is possible, however,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_133'/>
+133
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_133'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * that a malformed tree will corrupt the token stream. In this case,</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_134'/>
+134
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_134'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * an &#60;code&#62;IOException&#60;/code&#62; will eventually be thrown.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_135'/>
+135
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_135'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_136'/>
+136
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_136'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @return A single tree, or &#60;code&#62;null&#60;/code&#62; at end of token stream.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_137'/>
+137
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_137'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_138'/>
+138
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_138'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_139'/>
+139
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_139'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public Tree readTree() throws IOException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_140'/>
+140
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_140'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    Tree t = null;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_141'/>
+141
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_141'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_142'/>
+142
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_142'>2</a>
+<span>
+1. readTree : negated conditional &rarr; KILLED<br/>
+2. readTree : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    while (tokenizer.hasNext() &#38;&#38; t == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_143'/>
+143
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_143'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_144'/>
+144
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_144'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      //Setup PDA</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_145'/>
+145
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_145'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      this.currentTree = null;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_146'/>
+146
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_146'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      this.stack = new ArrayList&#60;&#62;();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_147'/>
+147
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_147'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_148'/>
+148
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_148'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      try {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_149'/>
+149
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_149'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>        t = getTreeFromInputStream();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_150'/>
+150
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_150'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      } catch (NoSuchElementException e) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_151'/>
+151
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_151'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>        throw new IOException(&#34;End of token stream encountered before parsing could complete.&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_152'/>
+152
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_152'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_153'/>
+153
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_153'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_154'/>
+154
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_154'>1</a>
+<span>
+1. readTree : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>      if (t != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_155'/>
+155
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_155'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // cdm 20100618: Don&#39;t do this!  This was never the historical behavior!!!</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_156'/>
+156
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_156'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // Escape empty trees e.g. (())</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_157'/>
+157
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_157'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        // while(t != null &#38;&#38; (t.value() == null || t.value().equals(&#34;&#34;)) &#38;&#38; t.numChildren() &#60;= 1)</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_158'/>
+158
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_158'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        //   t = t.firstChild();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_159'/>
+159
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_159'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_160'/>
+160
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_160'>2</a>
+<span>
+1. readTree : negated conditional &rarr; KILLED<br/>
+2. readTree : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>        if (treeNormalizer != null &#38;&#38; treeFactory != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_161'/>
+161
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_161'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          t = treeNormalizer.normalizeWholeTree(t, treeFactory);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_162'/>
+162
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_162'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_163'/>
+163
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_163'>1</a>
+<span>
+1. readTree : negated conditional &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>        if (t != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_164'/>
+164
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_164'>1</a>
+<span>
+1. readTree : removed call to edu/stanford/nlp/trees/Tree::indexLeaves &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>          t.indexLeaves(true);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_165'/>
+165
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_165'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_166'/>
+166
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_166'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_167'/>
+167
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_167'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_168'/>
+168
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_168'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_169'/>
+169
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_169'>1</a>
+<span>
+1. readTree : mutated return of Object value for edu/stanford/nlp/trees/PennTreeReader::readTree to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>    return t;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_170'/>
+170
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_170'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_171'/>
+171
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_171'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_172'/>
+172
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_172'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  private static final Pattern STAR_PATTERN = Pattern.compile(&#34;\\\\\\*&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_173'/>
+173
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_173'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  private static final Pattern SLASH_PATTERN = Pattern.compile(&#34;\\\\/&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_174'/>
+174
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_174'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_175'/>
+175
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_175'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_176'/>
+176
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_176'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  private Tree getTreeFromInputStream() throws NoSuchElementException {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_177'/>
+177
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_177'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    int wordIndex = 1;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_178'/>
+178
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_178'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_179'/>
+179
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_179'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    // FSA</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_180'/>
+180
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_180'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    label:</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_181'/>
+181
+</td>
+<td class='uncertain'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_181'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; TIMED_OUT<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='uncertain'>    while (tokenizer.hasNext()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_182'/>
+182
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_182'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      String token = tokenizer.next();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_183'/>
+183
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_183'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_184'/>
+184
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_184'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>      switch (token) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_185'/>
+185
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_185'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        case leftParen:</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_186'/>
+186
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_186'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_187'/>
+187
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_187'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          // cdm 20100225: This next line used to have &#34;&#34; instead of null, but the traditional and current tree normalizers depend on the label being null not &#34;&#34; when there is no label on a tree (like the outermost English PTB level)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_188'/>
+188
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_188'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          String label = (tokenizer.peek().equals(leftParen)) ? null : tokenizer.next();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_189'/>
+189
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_189'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (rightParen.equals(label)) {//Skip past empty trees</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_190'/>
+190
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_190'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>            continue;</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_191'/>
+191
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_191'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          } else if (treeNormalizer != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_192'/>
+192
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_192'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            label = treeNormalizer.normalizeNonterminal(label);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_193'/>
+193
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_193'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_194'/>
+194
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_194'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_195'/>
+195
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_195'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (label != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_196'/>
+196
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_196'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            label = STAR_PATTERN.matcher(label).replaceAll(&#34;*&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_197'/>
+197
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_197'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            label = SLASH_PATTERN.matcher(label).replaceAll(&#34;/&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_198'/>
+198
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_198'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_199'/>
+199
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_199'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_200'/>
+200
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_200'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          Tree newTree = treeFactory.newTreeNode(label, null); // dtrs are added below</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_201'/>
+201
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_201'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_202'/>
+202
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_202'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (currentTree == null)</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_203'/>
+203
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_203'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            stack.add(newTree);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_204'/>
+204
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_204'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          else {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_205'/>
+205
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_205'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/trees/Tree::addChild &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            currentTree.addChild(newTree);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_206'/>
+206
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_206'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            stack.add(currentTree);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_207'/>
+207
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_207'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_208'/>
+208
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_208'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_209'/>
+209
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_209'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          currentTree = newTree;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_210'/>
+210
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_210'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_211'/>
+211
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_211'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          break;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_212'/>
+212
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_212'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        case rightParen:</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_213'/>
+213
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_213'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (stack.isEmpty()) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_214'/>
+214
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_214'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // Warn that file has too many right parentheses</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_215'/>
+215
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_215'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/util/logging/Redwood$RedwoodChannels::info &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>            log.info(&#34;PennTreeReader: warning: file has extra non-matching right parenthesis [ignored]&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_216'/>
+216
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_216'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>            break label;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_217'/>
+217
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_217'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_218'/>
+218
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_218'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_219'/>
+219
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_219'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          //Accept</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_220'/>
+220
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_220'>1</a>
+<span>
+1. getTreeFromInputStream : Replaced integer subtraction with addition &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          currentTree = stack.remove(stack.size() - 1);  // i.e., stack.pop()</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_221'/>
+221
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_221'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_222'/>
+222
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_222'>2</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+2. getTreeFromInputStream : mutated return of Object value for edu/stanford/nlp/trees/PennTreeReader::getTreeFromInputStream to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (stack.isEmpty()) return currentTree;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_223'/>
+223
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_223'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_224'/>
+224
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_224'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          break;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_225'/>
+225
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_225'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>        default:</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_226'/>
+226
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_226'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_227'/>
+227
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_227'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (currentTree == null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_228'/>
+228
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_228'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // A careful Reader should warn here, but it&#39;s kind of useful to</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_229'/>
+229
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_229'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // suppress this because then the TreeReader doesn&#39;t print a ton of</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_230'/>
+230
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_230'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // messages if there is a README file in a directory of Trees.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_231'/>
+231
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_231'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>            // log.info(&#34;PennTreeReader: warning: file has extra token not in a s-expression tree: &#34; + token + &#34; [ignored]&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_232'/>
+232
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_232'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>            break label;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_233'/>
+233
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_233'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_234'/>
+234
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_234'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_235'/>
+235
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_235'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          String terminal = (treeNormalizer == null) ? token : treeNormalizer.normalizeTerminal(token);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_236'/>
+236
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_236'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          terminal = STAR_PATTERN.matcher(terminal).replaceAll(&#34;*&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_237'/>
+237
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_237'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          terminal = SLASH_PATTERN.matcher(terminal).replaceAll(&#34;/&#34;);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_238'/>
+238
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_238'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>          Tree leaf = treeFactory.newLeaf(terminal);</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_239'/>
+239
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_239'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>          if (leaf.label() instanceof HasIndex) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_240'/>
+240
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_240'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            HasIndex hi = (HasIndex) leaf.label();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_241'/>
+241
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_241'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/ling/HasIndex::setIndex &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            hi.setIndex(wordIndex);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_242'/>
+242
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_242'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_243'/>
+243
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_243'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          if (leaf.label() instanceof HasWord) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_244'/>
+244
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_244'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            HasWord hw = (HasWord) leaf.label();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_245'/>
+245
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_245'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/ling/HasWord::setWord &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>            hw.setWord(leaf.label().value());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_246'/>
+246
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_246'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_247'/>
+247
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_247'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>          if (leaf.label() instanceof HasTag) {</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_248'/>
+248
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_248'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>            HasTag ht = (HasTag) leaf.label();</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_249'/>
+249
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_249'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/ling/HasTag::setTag &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>            ht.setTag(currentTree.label().value());</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_250'/>
+250
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_250'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_251'/>
+251
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_251'>1</a>
+<span>
+1. getTreeFromInputStream : Changed increment from 1 to -1 &rarr; SURVIVED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='survived'>          wordIndex++;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_252'/>
+252
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_252'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_253'/>
+253
+</td>
+<td class='killed'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_253'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/trees/Tree::addChild &rarr; KILLED<br/>
+
+</span>
+</td>
+<td class='covered'><pre><span  class='killed'>          currentTree.addChild(leaf);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_254'/>
+254
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_254'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          // cdm: Note: this implementation just isn&#39;t as efficient as the old recursive descent parser (see 2008 code), where all the daughters are gathered before the tree is made....</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_255'/>
+255
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_255'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>          break;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_256'/>
+256
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_256'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+
+<tr>
+<td class='covered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_257'/>
+257
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_257'></a>
+<span>
+</span>
+</td>
+<td class='covered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_258'/>
+258
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_258'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_259'/>
+259
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_259'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    //Reject</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_260'/>
+260
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_260'>1</a>
+<span>
+1. getTreeFromInputStream : negated conditional &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>    if (currentTree != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_261'/>
+261
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_261'>1</a>
+<span>
+1. getTreeFromInputStream : removed call to edu/stanford/nlp/util/logging/Redwood$RedwoodChannels::info &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>      log.info(&#34;PennTreeReader: warning: incomplete tree (extra left parentheses in input): &#34; + currentTree);</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_262'/>
+262
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_262'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_263'/>
+263
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_263'>1</a>
+<span>
+1. getTreeFromInputStream : mutated return of Object value for edu/stanford/nlp/trees/PennTreeReader::getTreeFromInputStream to ( if (x != null) null else throw new RuntimeException ) &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>    return null;</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_264'/>
+264
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_264'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_265'/>
+265
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_265'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_266'/>
+266
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_266'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_267'/>
+267
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_267'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_268'/>
+268
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_268'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Closes the underlying &#60;code&#62;Reader&#60;/code&#62; used to create this</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_269'/>
+269
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_269'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * class.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_270'/>
+270
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_270'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_271'/>
+271
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_271'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  @Override</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_272'/>
+272
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_272'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public void close() throws IOException {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_273'/>
+273
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_273'>1</a>
+<span>
+1. close : removed call to java/io/Reader::close &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>    reader.close();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_274'/>
+274
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_274'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_275'/>
+275
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_275'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_276'/>
+276
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_276'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_277'/>
+277
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_277'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  /**</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_278'/>
+278
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_278'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * Loads treebank data from first argument and prints it.</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_279'/>
+279
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_279'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   *</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_280'/>
+280
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_280'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   * @param args Array of command-line arguments: specifies a filename</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_281'/>
+281
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_281'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>   */</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_282'/>
+282
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_282'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>  public static void main(String[] args) {</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_283'/>
+283
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_283'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>    try {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_284'/>
+284
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_284'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      TreeFactory tf = new LabeledScoredTreeFactory();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_285'/>
+285
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_285'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      Reader r = new BufferedReader(new InputStreamReader(new FileInputStream(args[0]), &#34;UTF-8&#34;));</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_286'/>
+286
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_286'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      TreeReader tr = new PennTreeReader(r, tf);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_287'/>
+287
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_287'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>      Tree t = tr.readTree();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_288'/>
+288
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_288'>1</a>
+<span>
+1. main : negated conditional &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>      while (t != null) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_289'/>
+289
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_289'>1</a>
+<span>
+1. main : removed call to java/io/PrintStream::println &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>        System.out.println(t);</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_290'/>
+290
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_290'>1</a>
+<span>
+1. main : removed call to java/io/PrintStream::println &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>        System.out.println();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_291'/>
+291
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_291'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>        t = tr.readTree();</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_292'/>
+292
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_292'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>      }</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_293'/>
+293
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_293'>1</a>
+<span>
+1. main : removed call to java/io/Reader::close &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>      r.close();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_294'/>
+294
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_294'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    } catch (IOException ioe) {</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_295'/>
+295
+</td>
+<td class='survived'>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_295'>1</a>
+<span>
+1. main : removed call to java/io/IOException::printStackTrace &rarr; NO_COVERAGE<br/>
+
+</span>
+</td>
+<td class='uncovered'><pre><span  class='survived'>      ioe.printStackTrace();</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_296'/>
+296
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_296'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>    }</span></pre></td></tr>
+
+
+<tr>
+<td class='uncovered'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_297'/>
+297
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_297'></a>
+<span>
+</span>
+</td>
+<td class='uncovered'><pre><span  class=''>  }</span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_298'/>
+298
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_298'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''></span></pre></td></tr>
+
+
+<tr>
+<td class='na'>
+<a name='org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_299'/>
+299
+</td>
+<td class=''>
+<span class='pop'>
+<a href='#grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_299'></a>
+<span>
+</span>
+</td>
+<td class=''><pre><span  class=''>}</span></pre></td></tr>
+
+
+
+<tr><td></td><td></td><td><h2>Mutations</h2></td></tr>
+
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_102'>102</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_102'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_103'>103</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_103'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b><init><br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_108'>108</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_108'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> changed conditional boundary &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>3.<span><b>3</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_110'>110</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_110'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</p> <p class='NO_COVERAGE'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_111'>111</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_111'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b><init><br/><b>Killed by : </b>none</span></span> Changed increment from 1 to -1 &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_142'>142</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_142'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_154'>154</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_154'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>edu.stanford.nlp.trees.international.negra.NegraPennLanguagePackTest.testBasicCategory(edu.stanford.nlp.trees.international.negra.NegraPennLanguagePackTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_160'>160</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_160'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>edu.stanford.nlp.trees.international.negra.NegraPennLanguagePackTest.testBasicCategory(edu.stanford.nlp.trees.international.negra.NegraPennLanguagePackTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_163'>163</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_163'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_164'>164</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_164'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>none</span></span> removed call to edu/stanford/nlp/trees/Tree::indexLeaves &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_169'>169</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_169'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>readTree<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> mutated return of Object value for edu/stanford/nlp/trees/PennTreeReader::readTree to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_181'>181</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_181'/> 
+
+<p class='TIMED_OUT'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; TIMED_OUT</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_188'>188</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_188'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_189'>189</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_189'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_191'>191</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_191'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_195'>195</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_195'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_202'>202</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_202'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_205'>205</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_205'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> removed call to edu/stanford/nlp/trees/Tree::addChild &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_213'>213</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_213'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_215'>215</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_215'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> removed call to edu/stanford/nlp/util/logging/Redwood$RedwoodChannels::info &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_220'>220</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_220'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> Replaced integer subtraction with addition &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_222'>222</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_222'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> <p class='KILLED'><span class='pop'>2.<span><b>2</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> mutated return of Object value for edu/stanford/nlp/trees/PennTreeReader::getTreeFromInputStream to ( if (x != null) null else throw new RuntimeException ) &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_227'>227</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_227'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_235'>235</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_235'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_239'>239</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_239'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_241'>241</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_241'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> removed call to edu/stanford/nlp/ling/HasIndex::setIndex &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_243'>243</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_243'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[202](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest)</span></span> negated conditional &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_245'>245</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_245'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[202](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest)</span></span> removed call to edu/stanford/nlp/ling/HasWord::setWord &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_247'>247</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_247'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_249'>249</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_249'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> removed call to edu/stanford/nlp/ling/HasTag::setTag &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_251'>251</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_251'/> 
+
+<p class='SURVIVED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> Changed increment from 1 to -1 &rarr; SURVIVED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_253'>253</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_253'/> 
+
+<p class='KILLED'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest)</span></span> removed call to edu/stanford/nlp/trees/Tree::addChild &rarr; KILLED</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_260'>260</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_260'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_261'>261</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_261'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> removed call to edu/stanford/nlp/util/logging/Redwood$RedwoodChannels::info &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_263'>263</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_263'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>getTreeFromInputStream<br/><b>Killed by : </b>none</span></span> mutated return of Object value for edu/stanford/nlp/trees/PennTreeReader::getTreeFromInputStream to ( if (x != null) null else throw new RuntimeException ) &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_273'>273</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_273'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>close<br/><b>Killed by : </b>none</span></span> removed call to java/io/Reader::close &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_288'>288</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_288'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>main<br/><b>Killed by : </b>none</span></span> negated conditional &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_289'>289</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_289'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>main<br/><b>Killed by : </b>none</span></span> removed call to java/io/PrintStream::println &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_290'>290</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_290'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>main<br/><b>Killed by : </b>none</span></span> removed call to java/io/PrintStream::println &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_293'>293</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_293'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>main<br/><b>Killed by : </b>none</span></span> removed call to java/io/Reader::close &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+<tr>
+<td><a href='#org.pitest.mutationtest.report.html.SourceFile@6f9dd13a_295'>295</a></td> 
+<td></td>
+<td>
+
+<a name='grouporg.pitest.mutationtest.report.html.SourceFile@6f9dd13a_295'/> 
+
+<p class='NO_COVERAGE'><span class='pop'>1.<span><b>1</b><br/><b>Location : </b>main<br/><b>Killed by : </b>none</span></span> removed call to java/io/IOException::printStackTrace &rarr; NO_COVERAGE</p> 
+</td>
+</tr>
+
+</table>
+
+
+<h2>Active mutators</h2>
+<ul>
+<li class='mutator'>INCREMENTS_MUTATOR</li>
+<li class='mutator'>VOID_METHOD_CALL_MUTATOR</li>
+<li class='mutator'>RETURN_VALS_MUTATOR</li>
+<li class='mutator'>MATH_MUTATOR</li>
+<li class='mutator'>NEGATE_CONDITIONALS_MUTATOR</li>
+<li class='mutator'>INVERT_NEGS_MUTATOR</li>
+<li class='mutator'>CONDITIONALS_BOUNDARY_MUTATOR</li>
+
+</ul>
+
+<h2>Tests examined</h2>
+<ul>
+<li>edu.stanford.nlp.trees.tregex.TregexTest.testReuse(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testToBeRelations(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (102 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testRepeatedVariables(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testInsertDelete(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (3 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testSister(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testTwoResults(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testDocExamples(edu.stanford.nlp.trees.tregex.TregexTest) (4 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testDominateUnaryChain(edu.stanford.nlp.trees.tregex.TregexTest) (6 ms)</li><li>edu.stanford.nlp.trees.TreePrintTest.testConll2007(edu.stanford.nlp.trees.TreePrintTest) (14 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testLink(edu.stanford.nlp.trees.tregex.TregexTest) (2 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testInsert(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (4 ms)</li><li>edu.stanford.nlp.trees.TreeTest.testDominates(edu.stanford.nlp.trees.TreeTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testOnlyChild(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.QPTreeTransformerTest.testCompoundModifiers(edu.stanford.nlp.trees.QPTreeTransformerTest) (1 ms)</li><li>edu.stanford.nlp.trees.CoordinationTransformerTest.testMoveRB(edu.stanford.nlp.trees.CoordinationTransformerTest) (2 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testOneResult(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[91](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[90](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testDelete(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (1 ms)</li><li>edu.stanford.nlp.trees.TreeTest.testPennPrint(edu.stanford.nlp.trees.TreeTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testIthChild(edu.stanford.nlp.trees.tregex.TregexTest) (12 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testComplex(edu.stanford.nlp.trees.tregex.TregexTest) (12 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[86](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (38 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[84](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testCreateSubtrees(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[80](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testNonCollapsedSeparator(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[92](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[88](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[98](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testDisjunctionVariableAssignments(edu.stanford.nlp.trees.tregex.TregexTest) (2 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testAdjoinF(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[94](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testCoindex(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (8 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[96](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testExcise(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testHeadOfPhrase(edu.stanford.nlp.trees.tregex.TregexTest) (5 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[61](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[63](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[67](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[69](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testSubtreePattern(edu.stanford.nlp.trees.tregex.TregexTest) (5 ms)</li><li>edu.stanford.nlp.trees.GrammaticalStructureTest.testEnglishDependenciesByTree(edu.stanford.nlp.trees.GrammaticalStructureTest) (12 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[65](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (29 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testParenthesizedExpressions(edu.stanford.nlp.trees.tregex.TregexTest) (5 ms)</li><li>edu.stanford.nlp.trees.SemanticHeadFinderTest.testCopulaHeadSemanticHeadFinder(edu.stanford.nlp.trees.SemanticHeadFinderTest) (5 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[82](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testImmediateSister(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[42](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[46](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[47](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.OracleTest.testEndToEndCompoundUnaries(edu.stanford.nlp.parser.shiftreduce.OracleTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[39](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.ModCollinsHeadFinderTest.testModCollinsHeadFinder(edu.stanford.nlp.trees.ModCollinsHeadFinderTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[43](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructureTest.testBasicRelations(edu.stanford.nlp.trees.international.pennchinese.ChineseGrammaticalStructureTest) (25 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[50](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testInsertWithNamedNode(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (3 ms)</li><li>edu.stanford.nlp.parser.metrics.TreeSpanScoringTest.testMislabeledSpans(edu.stanford.nlp.parser.metrics.TreeSpanScoringTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[58](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testPrecedingFollowingSister(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[51](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[203](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[207](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[206](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testFirstLastChild(edu.stanford.nlp.trees.tregex.TregexTest) (7 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[55](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[54](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testBasicRelations(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (578 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testPrecedesFollows(edu.stanford.nlp.trees.tregex.TregexTest) (8 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[23](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[24](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[59](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.TreeTest.testDeeperCopy(edu.stanford.nlp.trees.TreeTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[20](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testHasChildren(edu.stanford.nlp.semgraph.SemanticGraphTest) (54 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[70](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[74](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[73](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[78](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (38 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testIfExists(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[225](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[226](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest.testFixSplitElement(edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest) (4 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[28](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testPrune(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[77](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[27](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[229](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[85](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[185](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[89](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[189](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[181](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[237](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[105](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (45 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[109](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (40 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[221](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[93](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testAdjoinH(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[97](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[174](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[178](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testCommonAncestor(edu.stanford.nlp.semgraph.SemanticGraphTest) (213 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[249](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[12](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[116](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (39 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[170](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[210](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testBasicRelationsWithCopulaAsHead(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (89 ms)</li><li>edu.stanford.nlp.trees.international.pennchinese.UniversalChineseGrammaticalStructureTest.testBasicRelations(edu.stanford.nlp.trees.international.pennchinese.UniversalChineseGrammaticalStructureTest) (72 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[62](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[166](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[252](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[214](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[218](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[128](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (40 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[202](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[112](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (50 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testComplex2(edu.stanford.nlp.trees.tregex.TregexTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[66](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[162](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[1](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[16](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testGetPathToRoot(edu.stanford.nlp.semgraph.SemanticGraphTest) (53 ms)</li><li>edu.stanford.nlp.trees.QPTreeTransformerTest.testMoney(edu.stanford.nlp.trees.QPTreeTransformerTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testParentEquals(edu.stanford.nlp.trees.tregex.TregexTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[197](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[193](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[35](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testJoãoSilva(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testGetSiblings(edu.stanford.nlp.semgraph.SemanticGraphTest) (51 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testCategoryDisjunction(edu.stanford.nlp.trees.tregex.TregexTest) (4 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[147](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[31](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[233](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[81](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[140](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (39 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testShortestPath(edu.stanford.nlp.semgraph.SemanticGraphTest) (53 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[142](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[144](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[141](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest.testAnotherSplit(edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest) (10 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[148](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[143](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[149](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.PennTreeReaderTest.testRead(edu.stanford.nlp.trees.PennTreeReaderTest) (0 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[135](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[136](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (45 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[134](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[260](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[130](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[133](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[159](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[131](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[132](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (42 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[5](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[6](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[125](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[9](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testReplaceTree(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[123](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[124](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[257](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[8](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[7](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[256](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testOnlyMatchRoot(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[122](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (42 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[258](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[259](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testCopyNodes(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (5 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[121](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (44 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[120](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[246](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[158](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[244](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.international.negra.NegraPennLanguagePackTest.testBasicCategory(edu.stanford.nlp.trees.international.negra.NegraPennLanguagePackTest) (12 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testSegmentedAndEqualsExpressions(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testNonCollapsedRelations(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (24 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[157](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[245](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[151](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[152](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[150](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[153](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testKeyword(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[156](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[155](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[243](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[240](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testPrecedesDescribedChain(edu.stanford.nlp.trees.tregex.TregexTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[137](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (39 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[242](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[241](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[154](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[138](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.parser.metrics.TreeSpanScoringTest.testMissingSpan(edu.stanford.nlp.parser.metrics.TreeSpanScoringTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[139](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (39 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[103](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (62 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testChineseReplaceTree(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testCategoryFunctions(edu.stanford.nlp.trees.tregex.TregexTest) (2 ms)</li><li>edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest.testNormalDelete(edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[100](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (51 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[102](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (57 ms)</li><li>edu.stanford.nlp.trees.SemanticHeadFinderTest.testRegularSemanticHeadFinder(edu.stanford.nlp.trees.SemanticHeadFinderTest) (4 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[101](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testTopologicalSort(edu.stanford.nlp.semgraph.SemanticGraphTest) (46 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[188](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testWordDisjunction(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testImmediatelyDominates(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[186](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[232](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[180](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[182](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[236](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[104](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (56 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[230](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.ReorderingOracleTest.testReorderIncorrectShiftResultingTree(edu.stanford.nlp.parser.shiftreduce.ReorderingOracleTest) (11 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testCollapsedRelations(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (101 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[108](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (44 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[238](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testMoeCurlyLarry(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[106](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[224](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[222](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testReplaceWithRepeats(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[190](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[179](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[184](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[175](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[177](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[171](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testOptional(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testDominateDescribedChain(edu.stanford.nlp.trees.tregex.TregexTest) (4 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[220](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testTest(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[13](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (40 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[115](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[248](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[119](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[213](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[117](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (38 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[11](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[169](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[173](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[211](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[163](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[251](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[161](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.ReorderingOracleTest.testReorderIncorrectShift(edu.stanford.nlp.parser.shiftreduce.ReorderingOracleTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[167](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[255](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[215](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[127](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[4](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[165](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (29 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[253](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[19](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[17](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[2](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[219](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[129](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[15](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[217](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[0](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (52 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[201](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserTest.testCompoundUnaryTransitions(edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserTest) (8 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[111](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (62 ms)</li><li>edu.stanford.nlp.trees.QPTreeTransformerTest.testMoneyOrMore(edu.stanford.nlp.trees.QPTreeTransformerTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[113](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (41 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[198](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testImmediatePrecedesFollows(edu.stanford.nlp.trees.tregex.TregexTest) (11 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[30](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[194](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[34](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[192](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testLeftRightMostDescendant(edu.stanford.nlp.trees.tregex.TregexTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[36](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.TreeTest.testRemove(edu.stanford.nlp.trees.TreeTest) (1 ms)</li><li>edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest.testNothingLeftTree(edu.stanford.nlp.trees.international.pennchinese.CTBErrorCorrectingTreeNormalizerTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testVariableGroups(edu.stanford.nlp.trees.tregex.TregexTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[234](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[196](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[32](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[146](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testNamed(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testReplaceNode(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (4 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[41](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testBackReference(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[45](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[40](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.dcoref.RuleBasedCorefMentionFinderTest.testFindTreeWithSmallestSpan(edu.stanford.nlp.dcoref.RuleBasedCorefMentionFinderTest) (41 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[37](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testMultiplePatterns(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[44](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testChinese(edu.stanford.nlp.trees.tregex.TregexTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[38](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[52](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testCreateSubtreesExtended(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (6 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[53](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[56](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[57](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[205](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[204](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[209](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[48](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[208](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testDominates(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testCCProcessedRelations(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (156 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[49](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.TreeTest.testTreeIterator(edu.stanford.nlp.trees.TreeTest) (1 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testMonthDayYear(edu.stanford.nlp.trees.tregex.TregexTest) (16 ms)</li><li>edu.stanford.nlp.parser.metrics.TreeSpanScoringTest.testTagErrors(edu.stanford.nlp.parser.metrics.TreeSpanScoringTest) (1 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.OracleTest.testBuildParentMap(edu.stanford.nlp.parser.shiftreduce.OracleTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[21](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (29 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[22](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testRootDisjunction(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[71](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (29 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[76](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[72](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[75](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[79](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (36 ms)</li><li>edu.stanford.nlp.semgraph.semgrex.SemgrexTest.testLemma(edu.stanford.nlp.semgraph.semgrex.SemgrexTest) (10 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[29](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[228](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[26](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[25](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[227](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[187](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (44 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[87](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[183](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (35 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[83](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[231](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (39 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testGetCommonAncestor(edu.stanford.nlp.semgraph.SemanticGraphTest) (65 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[107](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (42 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[239](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.ReorderingOracleTest.testReorderIncorrectBinaryTransition(edu.stanford.nlp.parser.shiftreduce.ReorderingOracleTest) (9 ms)</li><li>edu.stanford.nlp.parser.metrics.TreeSpanScoringTest.testNoErrors(edu.stanford.nlp.parser.metrics.TreeSpanScoringTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[223](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[176](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[95](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[172](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testRelabel(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (7 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[247](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.parser.metrics.TreeSpanScoringTest.testExtraSpan(edu.stanford.nlp.parser.metrics.TreeSpanScoringTest) (7 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testNoResults(edu.stanford.nlp.trees.tregex.TregexTest) (1 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[118](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (50 ms)</li><li>edu.stanford.nlp.semgraph.SemanticGraphTest.testIsAncestor(edu.stanford.nlp.semgraph.SemanticGraphTest) (52 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[10](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (39 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[212](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (34 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[168](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[99](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[164](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[250](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[60](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[160](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[254](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testAdjoin(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[64](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (30 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[126](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (40 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[68](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserTest.testSeparators(edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserTest) (2 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[18](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[3](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (29 ms)</li><li>edu.stanford.nlp.trees.tregex.TregexTest.testTwoChildren(edu.stanford.nlp.trees.tregex.TregexTest) (3 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[14](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (33 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[114](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (37 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[216](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserTest.testUnaryTransitions(edu.stanford.nlp.parser.shiftreduce.ShiftReduceParserTest) (8 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[200](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[199](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[191](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[110](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (45 ms)</li><li>edu.stanford.nlp.parser.shiftreduce.OracleTest.testEndToEndSingleUnaries(edu.stanford.nlp.parser.shiftreduce.OracleTest) (9 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[33](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (31 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[235](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (38 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[145](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (32 ms)</li><li>edu.stanford.nlp.semgraph.semgrex.SemgrexPatternTest.testFind(edu.stanford.nlp.semgraph.semgrex.SemgrexPatternTest) (23 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testAdjoinWithNamedNode(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (4 ms)</li><li>edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest.doTest[195](edu.stanford.nlp.trees.UniversalEnglishGrammaticalStructureTest) (29 ms)</li><li>edu.stanford.nlp.trees.EnglishGrammaticalStructureTest.testMoreBasicRelations(edu.stanford.nlp.trees.EnglishGrammaticalStructureTest) (50 ms)</li><li>edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest.testForeign(edu.stanford.nlp.trees.tregex.tsurgeon.TsurgeonTest) (1 ms)</li>
+</ul>
+
+<br/>
+
+Report generated by <a href='http://pitest.org'>PIT</a> 1.2.4
+
+</body>
+</html>

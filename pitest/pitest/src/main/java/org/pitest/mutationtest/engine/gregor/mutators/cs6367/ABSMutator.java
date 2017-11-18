@@ -1,68 +1,82 @@
+
 /**
  * Author(s): Matthew Bachelder, Vaishnavi Bhosale, Richard Fisher
- *
+ * <p>
  * ABS Mutator:
- *    Mutator to replace a variable by its negation, i.e. a  -a.
- *    Based on INVERT_NEGS mutator
+ * Mutator to replace a variable by its negation, i.e. a  -a.
+ * by substituing the negation of a constant value at time of assignment
  */
-//TODO: Implement Me!!!
 package org.pitest.mutationtest.engine.gregor.mutators.cs6367;
 
-import java.util.HashMap;
-import java.util.Map;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.pitest.mutationtest.engine.gregor.AbstractInsnMutator;
-import org.pitest.mutationtest.engine.gregor.InsnSubstitution;
+import org.pitest.mutationtest.engine.MutationIdentifier;
 import org.pitest.mutationtest.engine.gregor.MethodInfo;
 import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
 import org.pitest.mutationtest.engine.gregor.MutationContext;
-import org.pitest.mutationtest.engine.gregor.ZeroOperandMutation;
 
 public enum ABSMutator implements MethodMutatorFactory {
 
-  ABS_MUTATOR;
+    ABS_MUTATOR;
 
-  @Override
-  public MethodVisitor create(final MutationContext context,
-                              final MethodInfo methodInfo, final MethodVisitor methodVisitor) {
-    return new ABSMethodVisitor(this, methodInfo, context, methodVisitor);
-  }
+    @Override
+    public MethodVisitor create(final MutationContext context,
+                                final MethodInfo methodInfo, final MethodVisitor methodVisitor) {
+        return new ABSMutatorMethodVisitor(this, context, methodVisitor);
+    }
 
-  @Override
-  public String getGloballyUniqueId() {
-    return this.getClass().getName();
-  }
+    @Override
+    public String getGloballyUniqueId() {
+        return this.getClass().getName();
+    }
 
-  @Override
-  public String getName() {
-    return name();
-  }
-
+    @Override
+    public String getName() {
+        return name();
+    }
 }
 
-class ABSMethodVisitor extends AbstractInsnMutator {
+class ABSMutatorMethodVisitor extends MethodVisitor {
 
-  private static final String                            MESSAGE   = "removed negation";
-  private static final Map<Integer, ZeroOperandMutation> MUTATIONS = new HashMap<Integer, ZeroOperandMutation>();
+    private final MethodMutatorFactory factory;
+    private final MutationContext context;
 
-  static {
-    MUTATIONS.put(Opcodes.INEG, new InsnSubstitution(Opcodes.NOP, MESSAGE));
-    MUTATIONS.put(Opcodes.DNEG, new InsnSubstitution(Opcodes.NOP, MESSAGE));
-    MUTATIONS.put(Opcodes.FNEG, new InsnSubstitution(Opcodes.NOP, MESSAGE));
-    MUTATIONS.put(Opcodes.LNEG, new InsnSubstitution(Opcodes.NOP, MESSAGE));
-  }
+    ABSMutatorMethodVisitor(final MethodMutatorFactory factory,
+                            final MutationContext context, final MethodVisitor delegateMethodVisitor) {
+        super(Opcodes.ASM6, delegateMethodVisitor);
+        this.factory = factory;
+        this.context = context;
+    }
 
-  ABSMethodVisitor(final MethodMutatorFactory factory,
-                          final MethodInfo methodInfo, final MutationContext context,
-                          final MethodVisitor writer) {
-    super(factory, methodInfo, context, writer);
-  }
 
-  @Override
-  protected Map<Integer, ZeroOperandMutation> getMutations() {
-    return MUTATIONS;
-  }
+    @Override
+    public void visitVarInsn(final int opcode, final int var) {
+
+        if (opcode == Opcodes.ILOAD) {
+            final MutationIdentifier newId = this.context.registerMutation(
+                    this.factory, "Negated variable ");
+
+            if (this.context.shouldMutate(newId)) {
+                //this.mv.visitInsn(Opcodes.INEG);
+
+                this.mv.visitLdcInsn(Opcodes.NOP);
+                this.mv.visitIntInsn(Opcodes.ILOAD, var);
+                this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_M1);
+                this.mv.visitLdcInsn(Opcodes.IMUL);
+                this.mv.visitVarInsn(Opcodes.ISTORE, var);
+
+
+                //super.visitVarInsn(opcode, var);
+            } else {
+                super.visitVarInsn(opcode, var);
+            }
+        } else {
+            super.visitVarInsn(opcode, var);
+        }
+
+
+    }
+
 
 }

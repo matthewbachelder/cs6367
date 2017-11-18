@@ -46,7 +46,7 @@ public final class Mutator {
   static {
 
     /** CS/SE 6367 mutator that negates an integer or floating variable */
-    add("ABS", new ABSInlineConstantMutator());
+    add("ABS", ABSMutator.ABS_MUTATOR);
 
     /**
      * CS/SE 6367 mutator that replaces the operators & and | by | and &, respectively
