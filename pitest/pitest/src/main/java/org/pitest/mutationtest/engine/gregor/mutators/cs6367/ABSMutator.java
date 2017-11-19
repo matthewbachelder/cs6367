@@ -55,23 +55,38 @@ class ABSMutatorMethodVisitor extends MethodVisitor {
 
         if (opcode == Opcodes.ILOAD) {
             final MutationIdentifier newId = this.context.registerMutation(
-                    this.factory, "Negated variable ");
+                    this.factory, "Negated integer variable ");
 
             if (this.context.shouldMutate(newId)) {
-                //this.mv.visitInsn(Opcodes.INEG);
-
-                this.mv.visitLdcInsn(Opcodes.NOP);
                 this.mv.visitIntInsn(Opcodes.ILOAD, var);
                 this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_M1);
-                this.mv.visitLdcInsn(Opcodes.IMUL);
+                this.mv.visitInsn(Opcodes.IMUL);
                 this.mv.visitVarInsn(Opcodes.ISTORE, var);
+                super.visitVarInsn(opcode, var);
 
-
-                //super.visitVarInsn(opcode, var);
             } else {
                 super.visitVarInsn(opcode, var);
             }
-        } else {
+        } else if(opcode == Opcodes.DLOAD){
+            final MutationIdentifier newId = this.context.registerMutation(
+                    this.factory, "Negated double variable ");
+
+            if (this.context.shouldMutate(newId)) {
+                this.mv.visitVarInsn(Opcodes.DLOAD, var);
+                this.mv.visitLdcInsn(new Double("-1.0"));
+                this.mv.visitInsn(Opcodes.DMUL);
+                this.mv.visitVarInsn(Opcodes.DSTORE, var);
+                super.visitVarInsn(opcode, var);
+
+            } else {
+                super.visitVarInsn(opcode, var);
+            }
+
+        }
+
+
+
+        else {
             super.visitVarInsn(opcode, var);
         }
 
