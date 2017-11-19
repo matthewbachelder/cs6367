@@ -71,12 +71,12 @@ public final class Mutator {
     /**
      * CS/SE 6367 mutator that adds or removes an incrementer operator from a variable
      */
-    add("UOI", UOIMutator.UOI_MUTATOR);
+    add("UOI", UOIMutator.UOI__MUTATOR);
 
     /**
      * CS/SE 6367 mutator that replaces a constant with its negation, 0, 1, its incremented value or its decremented value
      */
-    add("CRCR", CRCRMutator.CRCR_MUTATOR);
+    add("CRCR", new CRCRMutator());
 
     /**
      * Default mutator that inverts the negation of integer and floating point numbers
@@ -208,8 +208,8 @@ public final class Mutator {
             AODMutator.AOD_MUTATOR,
             RORMutator.ROR_MUTATOR,
             AORMutator.AOR_MUTATOR,
-            UOIMutator.UOI_MUTATOR,
-            CRCRMutator.CRCR_MUTATOR);
+            UOIMutator.UOI__MUTATOR,
+            new CRCRMutator());
   }
 
   /*
