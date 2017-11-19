@@ -1,28 +1,374 @@
-/**
- * Author(s): Matthew Bachelder, Vaishnavi Bhosale, Richard Fisher
+/*
+ * Copyright 2011 Henry Coles and Stefan Penndorf
  *
- * CRCR Mutator:
- *    Mutator to replace a constant a with its negation, 1, 0, a+1 or a-1
- *    Based on MATH mutator but this probably needs to be changed
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
-//TODO: Implement Me!!!  Make sure the MATH mutator is the best starting point.
 package org.pitest.mutationtest.engine.gregor.mutators.cs6367;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.pitest.mutationtest.engine.gregor.*;
+import org.pitest.mutationtest.engine.MutationIdentifier;
+import org.pitest.mutationtest.engine.gregor.MethodInfo;
+import org.pitest.mutationtest.engine.gregor.MethodMutatorFactory;
+import org.pitest.mutationtest.engine.gregor.MutationContext;
+import org.pitest.util.PitError;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Random;
 
-public enum CRCRMutator implements MethodMutatorFactory {
+/**
+ * The <code>InlineConstantMutator</code> is a mutator that mutates integer
+ * inline constants (including short, byte, long) by adding 1 and that mutates
+ * float inline constants (including double) by replacing them with 1.
+ *
+ *
+ * @author Stefan Penndorf &lt;stefan.penndorf@gmail.com&gt;
+ */
+public class CRCRMutator implements MethodMutatorFactory {
 
-  CRCR_MUTATOR;
+  private final class CRCRMutatorVisitor extends MethodVisitor {
+    private final MutationContext context;
+
+    CRCRMutatorVisitor(final MutationContext context,
+                          final MethodVisitor delegateVisitor) {
+      super(Opcodes.ASM6, delegateVisitor);
+      this.context = context;
+    }
+
+    private void mutate(final Double constant) {
+      // avoid addition to floating points as may yield same value
+
+      Double replacement =constant ;
+
+      Random ran = new Random();
+
+      int i = ran.nextInt(5) +1;
+
+      switch(i){
+        case 1:
+          replacement = constant * Integer.valueOf(-1);
+          break;
+        case 2:
+          replacement = 0.0;
+          break;
+        case 3:
+          replacement = 1.0;
+          break;
+        case 4:
+          replacement++;
+          break;
+        case 5:
+          replacement--;
+          break;
+
+      }
+
+      if (shouldMutate(constant, replacement)) {
+        translateToByteCode(replacement);
+      } else {
+        translateToByteCode(constant);
+      }
+    }
+
+    private void mutate(final Float constant) {
+      // avoid addition to floating points as may yield same value
+
+      Float replacement = constant;
+
+      Random ran = new Random();
+
+      int i = ran.nextInt(5) +1;
+
+      switch(i){
+        case 1:
+          replacement = constant * Integer.valueOf(-1);
+          break;
+        case 2:
+          replacement = 0F;
+          break;
+        case 3:
+          replacement = 1F;
+          break;
+        case 4:
+          replacement++;
+          break;
+        case 5:
+          replacement--;
+          break;
+
+      }
+
+      if (shouldMutate(constant, replacement)) {
+        translateToByteCode(replacement);
+      } else {
+        translateToByteCode(constant);
+      }
+    }
+
+    private void mutate(final Integer constant) {
+       Integer replacement = constant;
+
+
+      Random ran = new Random();
+
+      int i = ran.nextInt(5) +1;
+
+      switch(i){
+        case 1:
+          replacement = constant * Integer.valueOf(-1);
+          break;
+        case 2:
+          replacement = Integer.valueOf(0);
+          break;
+        case 3:
+          replacement = Integer.valueOf(1);
+          break;
+        case 4:
+          replacement++;
+          break;
+        case 5:
+          replacement--;
+          break;
+
+      }
+
+
+      if (shouldMutate(constant, replacement)) {
+        translateToByteCode(replacement);
+      } else {
+        translateToByteCode(constant);
+      }
+    }
+
+    private void mutate(final Long constant) {
+
+       Long replacement = constant;
+
+      Random ran = new Random();
+
+      int i = ran.nextInt(5) +1;
+
+      switch(i){
+        case 1:
+          replacement = constant * Integer.valueOf(-1);
+          break;
+        case 2:
+          replacement = 0L;
+          break;
+        case 3:
+          replacement = 1L;
+          break;
+        case 4:
+          replacement++;
+          break;
+        case 5:
+          replacement--;
+          break;
+
+      }
+
+      if (shouldMutate(constant, replacement)) {
+        translateToByteCode(replacement);
+      } else {
+        translateToByteCode(constant);
+      }
+
+    }
+
+    private void mutate(final Number constant) {
+
+      if (constant instanceof Integer) {
+        mutate((Integer) constant);
+      } else if (constant instanceof Long) {
+        mutate((Long) constant);
+      } else if (constant instanceof Float) {
+        mutate((Float) constant);
+      } else if (constant instanceof Double) {
+        mutate((Double) constant);
+      } else {
+        throw new PitError("Unsupported subtype of Number found:"
+                + constant.getClass());
+      }
+
+    }
+
+    private <T extends Number> boolean shouldMutate(final T constant,
+                                                    final T replacement) {
+      final MutationIdentifier mutationId = this.context.registerMutation(
+              CRCRMutator.this, "Substituted " + constant + " with "
+                      + replacement);
+
+      return this.context.shouldMutate(mutationId);
+    }
+
+    private void translateToByteCode(final Double constant) {
+      if (constant == 0D) {
+        super.visitInsn(Opcodes.DCONST_0);
+      } else if (constant == 1D) {
+        super.visitInsn(Opcodes.DCONST_1);
+      } else {
+        super.visitLdcInsn(constant);
+      }
+    }
+
+    private void translateToByteCode(final Float constant) {
+      if (constant == 0.0F) {
+        super.visitInsn(Opcodes.FCONST_0);
+      } else if (constant == 1.0F) {
+        super.visitInsn(Opcodes.FCONST_1);
+      } else if (constant == 2.0F) {
+        super.visitInsn(Opcodes.FCONST_2);
+      } else {
+        super.visitLdcInsn(constant);
+      }
+    }
+
+    private void translateToByteCode(final Integer constant) {
+      switch (constant) {
+        case -1:
+          super.visitInsn(Opcodes.ICONST_M1);
+          break;
+        case 0:
+          super.visitInsn(Opcodes.ICONST_0);
+          break;
+        case 1:
+          super.visitInsn(Opcodes.ICONST_1);
+          break;
+        case 2:
+          super.visitInsn(Opcodes.ICONST_2);
+          break;
+        case 3:
+          super.visitInsn(Opcodes.ICONST_3);
+          break;
+        case 4:
+          super.visitInsn(Opcodes.ICONST_4);
+          break;
+        case 5:
+          super.visitInsn(Opcodes.ICONST_5);
+          break;
+        default:
+          super.visitLdcInsn(constant);
+          break;
+      }
+    }
+
+    private void translateToByteCode(final Long constant) {
+      if (constant == 0L) {
+        super.visitInsn(Opcodes.LCONST_0);
+      } else if (constant == 1L) {
+        super.visitInsn(Opcodes.LCONST_1);
+      } else {
+        super.visitLdcInsn(constant);
+      }
+    }
+
+    /**
+     * Translates the opcode to a number (inline constant) if possible or
+     * returns <code>null</code> if the opcode cannot be translated.
+     *
+     * @param opcode
+     *          that might represent an inline constant.
+     * @return the value of the inline constant represented by opcode or
+     *         <code>null</code> if the opcode does not represent a
+     *         number/constant.
+     */
+    private Number translateToNumber(final int opcode) {
+      switch (opcode) {
+        case Opcodes.ICONST_M1:
+          return Integer.valueOf(-1);
+        case Opcodes.ICONST_0:
+          return Integer.valueOf(0);
+        case Opcodes.ICONST_1:
+          return Integer.valueOf(1);
+        case Opcodes.ICONST_2:
+          return Integer.valueOf(2);
+        case Opcodes.ICONST_3:
+          return Integer.valueOf(3);
+        case Opcodes.ICONST_4:
+          return Integer.valueOf(4);
+        case Opcodes.ICONST_5:
+          return Integer.valueOf(5);
+        case Opcodes.LCONST_0:
+          return Long.valueOf(0L);
+        case Opcodes.LCONST_1:
+          return Long.valueOf(1L);
+        case Opcodes.FCONST_0:
+          return Float.valueOf(0F);
+        case Opcodes.FCONST_1:
+          return Float.valueOf(1F);
+        case Opcodes.FCONST_2:
+          return Float.valueOf(2F);
+        case Opcodes.DCONST_0:
+          return Double.valueOf(0D);
+        case Opcodes.DCONST_1:
+          return Double.valueOf(1D);
+        default:
+          return null;
+      }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.objectweb.asm.MethodAdapter#visitInsn(int)
+     */
+    @Override
+    public void visitInsn(final int opcode) {
+
+      final Number inlineConstant = translateToNumber(opcode);
+
+      if (inlineConstant == null) {
+        super.visitInsn(opcode);
+        return;
+      }
+
+      mutate(inlineConstant);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.objectweb.asm.MethodAdapter#visitIntInsn(int, int)
+     */
+    @Override
+    public void visitIntInsn(final int opcode, final int operand) {
+      if ((opcode == Opcodes.BIPUSH) || (opcode == Opcodes.SIPUSH)) {
+        mutate(operand);
+      } else {
+        super.visitIntInsn(opcode, operand);
+      }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.objectweb.asm.MethodAdapter#visitLdcInsn(java.lang.Object)
+     */
+    @Override
+    public void visitLdcInsn(final Object constant) {
+      // do not mutate strings or .class here
+      if (constant instanceof Number) {
+        mutate((Number) constant);
+      } else {
+        super.visitLdcInsn(constant);
+      }
+    }
+
+  }
 
   @Override
   public MethodVisitor create(final MutationContext context,
                               final MethodInfo methodInfo, final MethodVisitor methodVisitor) {
-    return new CRCRMethodVisitor(this, methodInfo, context, methodVisitor);
+    return new CRCRMutatorVisitor(context, methodVisitor);
   }
 
   @Override
@@ -31,100 +377,13 @@ public enum CRCRMutator implements MethodMutatorFactory {
   }
 
   @Override
-  public String getName() {
-    return name();
-  }
-
-}
-
-class CRCRMethodVisitor extends AbstractInsnMutator {
-
-  CRCRMethodVisitor(final MethodMutatorFactory factory,
-                    final MethodInfo methodInfo, final MutationContext context,
-                    final MethodVisitor writer) {
-    super(factory, methodInfo, context, writer);
-  }
-
-  private static final Map<Integer, ZeroOperandMutation> MUTATIONS = new HashMap<Integer, ZeroOperandMutation>();
-
-  static {
-    MUTATIONS.put(Opcodes.IADD, new InsnSubstitution(Opcodes.ISUB,
-            "Replaced integer addition with subtraction"));
-    MUTATIONS.put(Opcodes.ISUB, new InsnSubstitution(Opcodes.IADD,
-            "Replaced integer subtraction with addition"));
-    MUTATIONS.put(Opcodes.IMUL, new InsnSubstitution(Opcodes.IDIV,
-            "Replaced integer multiplication with division"));
-    MUTATIONS.put(Opcodes.IDIV, new InsnSubstitution(Opcodes.IMUL,
-            "Replaced integer division with multiplication"));
-    MUTATIONS.put(Opcodes.IOR, new InsnSubstitution(Opcodes.IAND,
-            "Replaced bitwise OR with AND"));
-    MUTATIONS.put(Opcodes.IAND, new InsnSubstitution(Opcodes.IOR,
-            "Replaced bitwise AND with OR"));
-    MUTATIONS.put(Opcodes.IREM, new InsnSubstitution(Opcodes.IMUL,
-            "Replaced integer modulus with multiplication"));
-    MUTATIONS.put(Opcodes.IXOR, new InsnSubstitution(Opcodes.IAND,
-            "Replaced XOR with AND"));
-    MUTATIONS.put(Opcodes.ISHL, new InsnSubstitution(Opcodes.ISHR,
-            "Replaced Shift Left with Shift Right"));
-    MUTATIONS.put(Opcodes.ISHR, new InsnSubstitution(Opcodes.ISHL,
-            "Replaced Shift Right with Shift Left"));
-    MUTATIONS.put(Opcodes.IUSHR, new InsnSubstitution(Opcodes.ISHL,
-            "Replaced Unsigned Shift Right with Shift Left"));
-
-    // longs
-
-    MUTATIONS.put(Opcodes.LADD, new InsnSubstitution(Opcodes.LSUB,
-            "Replaced long addition with subtraction"));
-    MUTATIONS.put(Opcodes.LSUB, new InsnSubstitution(Opcodes.LADD,
-            "Replaced long subtraction with addition"));
-    MUTATIONS.put(Opcodes.LMUL, new InsnSubstitution(Opcodes.LDIV,
-            "Replaced long multiplication with division"));
-    MUTATIONS.put(Opcodes.LDIV, new InsnSubstitution(Opcodes.LMUL,
-            "Replaced long division with multiplication"));
-    MUTATIONS.put(Opcodes.LOR, new InsnSubstitution(Opcodes.LAND,
-            "Replaced bitwise OR with AND"));
-    MUTATIONS.put(Opcodes.LAND, new InsnSubstitution(Opcodes.LOR,
-            "Replaced bitwise AND with OR"));
-    MUTATIONS.put(Opcodes.LREM, new InsnSubstitution(Opcodes.LMUL,
-            "Replaced long modulus with multiplication"));
-    MUTATIONS.put(Opcodes.LXOR, new InsnSubstitution(Opcodes.LAND,
-            "Replaced XOR with AND"));
-    MUTATIONS.put(Opcodes.LSHL, new InsnSubstitution(Opcodes.LSHR,
-            "Replaced Shift Left with Shift Right"));
-    MUTATIONS.put(Opcodes.LSHR, new InsnSubstitution(Opcodes.LSHL,
-            "Replaced Shift Right with Shift Left"));
-    MUTATIONS.put(Opcodes.LUSHR, new InsnSubstitution(Opcodes.LSHL,
-            "Replaced Unsigned Shift Right with Shift Left"));
-
-    // floats
-    MUTATIONS.put(Opcodes.FADD, new InsnSubstitution(Opcodes.FSUB,
-            "Replaced float addition with subtraction"));
-    MUTATIONS.put(Opcodes.FSUB, new InsnSubstitution(Opcodes.FADD,
-            "Replaced float subtraction with addition"));
-    MUTATIONS.put(Opcodes.FMUL, new InsnSubstitution(Opcodes.FDIV,
-            "Replaced float multiplication with division"));
-    MUTATIONS.put(Opcodes.FDIV, new InsnSubstitution(Opcodes.FMUL,
-            "Replaced float division with multiplication"));
-    MUTATIONS.put(Opcodes.FREM, new InsnSubstitution(Opcodes.FMUL,
-            "Replaced float modulus with multiplication"));
-
-    // doubles
-    MUTATIONS.put(Opcodes.DADD, new InsnSubstitution(Opcodes.DSUB,
-            "Replaced double addition with subtraction"));
-    MUTATIONS.put(Opcodes.DSUB, new InsnSubstitution(Opcodes.DADD,
-            "Replaced double subtraction with addition"));
-    MUTATIONS.put(Opcodes.DMUL, new InsnSubstitution(Opcodes.DDIV,
-            "Replaced double multiplication with division"));
-    MUTATIONS.put(Opcodes.DDIV, new InsnSubstitution(Opcodes.DMUL,
-            "Replaced double division with multiplication"));
-    MUTATIONS.put(Opcodes.DREM, new InsnSubstitution(Opcodes.DMUL,
-            "Replaced double modulus with multiplication"));
-
+  public String toString() {
+    return "CRCR_MUTATOR";
   }
 
   @Override
-  protected Map<Integer, ZeroOperandMutation> getMutations() {
-    return MUTATIONS;
+  public String getName() {
+    return toString();
   }
 
 }
