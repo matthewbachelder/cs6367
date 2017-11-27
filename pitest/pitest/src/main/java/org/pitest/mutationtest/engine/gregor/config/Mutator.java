@@ -217,7 +217,13 @@ public final class Mutator {
    * performance
    */
   public static Collection<MethodMutatorFactory> defaults() {
-    return group(InvertNegsMutator.INVERT_NEGS_MUTATOR,
+    return group(ABSMutator.ABS_MUTATOR,
+            OBBNMutator.OBBN_MUTATOR,
+            AODMutator.AOD_MUTATOR,
+            RORMutator.ROR_MUTATOR,
+            AORMutator.AOR_MUTATOR,
+            UOIMutator.UOI__MUTATOR,
+            new CRCRMutator(),InvertNegsMutator.INVERT_NEGS_MUTATOR,
             ReturnValsMutator.RETURN_VALS_MUTATOR, MathMutator.MATH_MUTATOR,
             VoidMethodCallMutator.VOID_METHOD_CALL_MUTATOR,
             NegateConditionalsMutator.NEGATE_CONDITIONALS_MUTATOR,

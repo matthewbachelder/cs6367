@@ -5,6 +5,8 @@ public class Test {
 
 
     public static void doInvert(int x){
-        x = x * (-1);
+        int z = 33;
+        int y = x+z;
+        y++;
     }
 }

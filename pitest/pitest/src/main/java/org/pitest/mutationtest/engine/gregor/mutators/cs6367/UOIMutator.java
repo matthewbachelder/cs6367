@@ -40,7 +40,6 @@ public enum UOIMutator implements MethodMutatorFactory {
   }
 }
 
-// This operator works exclusively on function local variables, not object variables
 class UOIMutatorMethodVisitor extends MethodVisitor {
 
   private final MethodMutatorFactory factory;
@@ -59,31 +58,47 @@ class UOIMutatorMethodVisitor extends MethodVisitor {
 
 
   @Override
-  public void visitVarInsn(final int opcode, final int var) {
+  public void visitVarInsn(final int opcode, final int var) { //visits instructions with variables in the assigment
 
-    if (opcode == Opcodes.ILOAD) {
+    if (opcode == Opcodes.ILOAD) { //	found load an int value from a local variable
       final MutationIdentifier newId = this.context.registerMutation(
-              this.factory, "Added increment to variable ");
+              this.factory, "Added unary operator to variable ");
 
-      if (this.context.shouldMutate(newId)) {
-        this.mv.visitIntInsn(Opcodes.ILOAD, var);
-        this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_1);
-        this.mv.visitInsn(Opcodes.IADD);
-        this.mv.visitVarInsn(Opcodes.ISTORE, var);
+      if (this.context.shouldMutate(newId)) { //insert new instructions into bytecode
+        this.mv.visitIntInsn(Opcodes.ILOAD, var); //load the int value from  variable
+
+        Random ran = new Random(); //random choice between -1 and 1
+        int c = ran.nextInt();
+
+        if(c%2 == 0)
+          this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_1); //push integer value of 1. simulates ++
+        else
+          this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_M1); //push integer value of -1. simulates --
+
+        this.mv.visitInsn(Opcodes.IADD); //add -1 or 1 to the value stored in variable
+        this.mv.visitVarInsn(Opcodes.ISTORE, var); //store the new value back into the variable
         super.visitVarInsn(opcode, var);
 
       } else {
         super.visitVarInsn(opcode, var);
       }
-    } else if(opcode == Opcodes.DLOAD){
+    } else if(opcode == Opcodes.DLOAD){  //	found load an double value from a local variable
       final MutationIdentifier newId = this.context.registerMutation(
-              this.factory, "Added increment to variable ");
+              this.factory, "Added unary operator to variable ");
 
       if (this.context.shouldMutate(newId)) {
         this.mv.visitVarInsn(Opcodes.DLOAD, var);
-        this.mv.visitLdcInsn(new Double("1.0"));
-        this.mv.visitInsn(Opcodes.DADD);
-        this.mv.visitVarInsn(Opcodes.DSTORE, var);
+
+        Random ran = new Random(); //random choice between -1 and 1
+        int c = ran.nextInt();
+
+        if(c%2 == 0)
+          this.mv.visitLdcInsn(new Double("1.0")); //push double value of 1. simualtes ++
+        else
+          this.mv.visitLdcInsn(new Double("-1.0")); //push double value of -1. simulates --
+
+        this.mv.visitInsn(Opcodes.DADD);  //add -1 or 1 to the value stored in variable
+        this.mv.visitVarInsn(Opcodes.DSTORE, var);//store the new value back into the variable
         super.visitVarInsn(opcode, var);
 
       } else {
@@ -91,14 +106,9 @@ class UOIMutatorMethodVisitor extends MethodVisitor {
       }
 
     }
-
-
-
     else {
       super.visitVarInsn(opcode, var);
     }
-
-
   }
 
 
@@ -107,25 +117,16 @@ class UOIMutatorMethodVisitor extends MethodVisitor {
 
 
   @Override
-  public void visitIincInsn(final int var, final int increment) {
-
-
-
+  public void visitIincInsn(final int var, final int increment) { //visits all instructions with a unary operator
 
         final MutationIdentifier newIde = this.context.registerMutation(this.factory,
-                "UOI Mutator: Removed unary operator of local variable");
+                "UOI Mutator: Removing the unary operator off of local variable");
 
         if (this.context.shouldMutate(newIde)) {
-
-          this.mv.visitIincInsn(var, 0);
-
+          this.mv.visitIincInsn(var, 0); //replaces unary increment/decrement amount with 0
         } else {
           this.mv.visitIincInsn(var, increment);
         }
-
-
-
-
 
   }
 

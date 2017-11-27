@@ -25,14 +25,7 @@ import org.pitest.util.PitError;
 
 import java.util.Random;
 
-/**
- * The <code>InlineConstantMutator</code> is a mutator that mutates integer
- * inline constants (including short, byte, long) by adding 1 and that mutates
- * float inline constants (including double) by replacing them with 1.
- *
- *
- * @author Stefan Penndorf &lt;stefan.penndorf@gmail.com&gt;
- */
+
 public class CRCRMutator implements MethodMutatorFactory {
 
   private final class CRCRMutatorVisitor extends MethodVisitor {
