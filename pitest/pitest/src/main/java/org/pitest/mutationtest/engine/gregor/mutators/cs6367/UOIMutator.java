@@ -71,9 +71,9 @@ class UOIMutatorMethodVisitor extends MethodVisitor {
         int c = ran.nextInt();
 
         if(c%2 == 0)
-          this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_1); //push integer value of 1. simulates ++
+          this.mv.visitInsn(Opcodes.ICONST_1); //push integer value of 1. simulates ++
         else
-          this.mv.visitIntInsn(Opcodes.BIPUSH, Opcodes.ICONST_M1); //push integer value of -1. simulates --
+          this.mv.visitInsn(Opcodes.ICONST_M1); //push integer value of -1. simulates --
 
         this.mv.visitInsn(Opcodes.IADD); //add -1 or 1 to the value stored in variable
         this.mv.visitVarInsn(Opcodes.ISTORE, var); //store the new value back into the variable
@@ -110,10 +110,6 @@ class UOIMutatorMethodVisitor extends MethodVisitor {
       super.visitVarInsn(opcode, var);
     }
   }
-
-
-
-
 
 
   @Override

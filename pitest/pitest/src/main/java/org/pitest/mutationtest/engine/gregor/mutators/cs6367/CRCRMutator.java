@@ -309,11 +309,7 @@ public class CRCRMutator implements MethodMutatorFactory {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.objectweb.asm.MethodAdapter#visitInsn(int)
-     */
+
     @Override
     public void visitInsn(final int opcode) {
 
@@ -327,25 +323,7 @@ public class CRCRMutator implements MethodMutatorFactory {
       mutate(inlineConstant);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.objectweb.asm.MethodAdapter#visitIntInsn(int, int)
-     */
-    @Override
-    public void visitIntInsn(final int opcode, final int operand) {
-      if ((opcode == Opcodes.BIPUSH) || (opcode == Opcodes.SIPUSH)) {
-        mutate(operand);
-      } else {
-        super.visitIntInsn(opcode, operand);
-      }
-    }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.objectweb.asm.MethodAdapter#visitLdcInsn(java.lang.Object)
-     */
     @Override
     public void visitLdcInsn(final Object constant) {
       // do not mutate strings or .class here
