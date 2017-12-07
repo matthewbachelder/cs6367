@@ -4,7 +4,7 @@
 This was a group project. This project will add several mutations to the suite of available PIT code. Mutation testing is a method of software quality control that tests the unit test suite defined for programs by artificially injecting errors, or mutations, into software. Tests are then executed to evaluate the quality of the test suite.  
 
 ## Idea
-Contributed	to the PIT mutation testing tool to implement more mutation operators. The	description	of the original	set	of mutation	operators	implemented	in PIT	is available	at:	http://pitest.org/quickstart/mutators/.	All	existing PIT mutation	operators	are	implemented	under	the	following source code	dir: “pitest/src/main/java/org/pitest/mutationtest/engine/gregor/mutators”). 
+Contributed	to the PIT mutation testing tool to implement more mutation operators. The description of the original set of mutation	operators	implemented	in PIT	is available	at:	http://pitest.org/quickstart/mutators/.	All	existing PIT mutation	operators	are	implemented	under	the	following source code	dir: “pitest/src/main/java/org/pitest/mutationtest/engine/gregor/mutators”). 
 We	evaluated	following	augmented	PIT mutators on	5 real-world projects called dnsjava, coreNLP, jsoup, twilio, webmagic.  
 1. ABS: Replaces a variable	by its negation,	e.g.,	a -> a	
 2. OBBN: Replaces	the	operators	&	by	|	and	vice	versa,	e.g., a&b	-> a|b	
@@ -17,12 +17,12 @@ We	evaluated	following	augmented	PIT mutators on	5 real-world projects called dn
 ## Overview
 #### 
 
-![Home page](/HomePage.png)
+![Pre-augementation Webmagic project report](/webmagic1.png)
 
 #### Back-end
 
 
-![Database](/schema/db1.png)
+![Post-augementation Webmagic project report](/webmagic2.png)
 
 ## Team Members
 * [Matthew Bachelder](https://www.linkedin.com/in/matthew-bachelder/)
