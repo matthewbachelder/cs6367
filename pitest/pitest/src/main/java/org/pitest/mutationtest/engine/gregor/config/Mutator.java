@@ -71,13 +71,17 @@ public final class Mutator {
     /**
      * CS/SE 6367 mutator that adds or removes an incrementer operator from a variable
      */
-    add("UOI", UOIMutator.UOI__MUTATOR);
+    add("UOI_PLUS", UOIMutatorPLUS.UOI_MUTATOR_PLUS);
+    add("UOI_MINUS", UOIMutatorMINUS.UOI__MUTATOR_MINUS);
 
     /**
      * CS/SE 6367 mutator that replaces a constant with its negation, 0, 1, its incremented value or its decremented value
      */
-    add("CRCR", new CRCRMutator());
-
+    add("CRCRADDONE", new CRCRMutatorADDONE());
+    add("CRCRSUBTRACTONE", new CRCRMutatorSUBTRACTONE());
+    add("CRCRNEGATE", new CRCRMutatorNEGATE());
+    add("CRCRAWITHONE", new CRCRMutatorWITHONE());
+    add("CRCRWITHZERO", new CRCRMutatorWITHZERO());
     /**
      * Default mutator that inverts the negation of integer and floating point numbers
      */
@@ -208,8 +212,13 @@ public final class Mutator {
             AODMutator.AOD_MUTATOR,
             RORMutator.ROR_MUTATOR,
             AORMutator.AOR_MUTATOR,
-            UOIMutator.UOI__MUTATOR,
-            new CRCRMutator());
+            UOIMutatorMINUS.UOI__MUTATOR_MINUS,
+            UOIMutatorPLUS.UOI_MUTATOR_PLUS,
+            new CRCRMutatorADDONE(),
+            new CRCRMutatorWITHZERO(),
+            new CRCRMutatorSUBTRACTONE(),
+            new CRCRMutatorNEGATE(),
+            new CRCRMutatorWITHONE());
   }
 
   /*
@@ -222,8 +231,13 @@ public final class Mutator {
             AODMutator.AOD_MUTATOR,
             RORMutator.ROR_MUTATOR,
             AORMutator.AOR_MUTATOR,
-            UOIMutator.UOI__MUTATOR,
-            new CRCRMutator(),InvertNegsMutator.INVERT_NEGS_MUTATOR,
+            UOIMutatorMINUS.UOI__MUTATOR_MINUS,
+            UOIMutatorPLUS.UOI_MUTATOR_PLUS,
+            new CRCRMutatorADDONE(),
+            new CRCRMutatorWITHZERO(),
+            new CRCRMutatorSUBTRACTONE(),
+            new CRCRMutatorNEGATE(),
+            new CRCRMutatorWITHONE(),InvertNegsMutator.INVERT_NEGS_MUTATOR,
             ReturnValsMutator.RETURN_VALS_MUTATOR, MathMutator.MATH_MUTATOR,
             VoidMethodCallMutator.VOID_METHOD_CALL_MUTATOR,
             NegateConditionalsMutator.NEGATE_CONDITIONALS_MUTATOR,
