@@ -1,7 +1,7 @@
 # cs6367 : Mutation Testing 
 
 
-##TA DIRECTIONS TO RUN
+# TA DIRECTIONS TO RUN
 1. Clone the repository.
 2. Run 'mvn clean install -DskipTests' to install the pit maven project into your local repository (located at pitest/pitest/*). Please      note you must skip the default tests PIT has included. 
 3. Include the 'CS6367' group name in the PIT configuration (located in the pom.xml of your test project). Alternativley you may run each    of the mutators individually by including the name of the mutator in the configuration instead.
