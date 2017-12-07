@@ -15,12 +15,11 @@ We	evaluated	following	augmented	PIT mutators on	5 real-world projects called dn
 7. CRCR: Replaces	a	constant a with	its	negation,	or with	1, 0, a +	1, a – 1,	e.g.,	a -> −a,	and	a -> a − 1.
 
 ## Overview
-#### 
+#### Pre-augementation Webmagic project report
 
 ![Pre-augementation Webmagic project report](/webmagic1.png)
 
-#### Back-end
-
+#### Post-augementation Webmagic project report
 
 ![Post-augementation Webmagic project report](/webmagic2.png)
 
